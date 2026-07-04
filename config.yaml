@@ -44,11 +44,11 @@ products:
   #     idealo: "https://www.idealo.de/preisvergleich/OffersOfProduct/…"
 
 location:
-  postal_code: "74321"
-  city: "Bietigheim-Bissingen"
-  latitude: 48.9543
-  longitude: 9.1316
-  radius_km: 25  # Umkreis für Filial-Verfügbarkeit
+  postal_code: "63533"
+  city: "Mainhausen"
+  latitude: 50.0167
+  longitude: 8.9833
+  radius_km: 50  # Umkreis für Filial-Verfügbarkeit
 
 # Quellen ein-/ausschalten. Schlüssel entsprechen den Adapter-Namen.
 sources:
