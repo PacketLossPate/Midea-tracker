@@ -51,7 +51,7 @@ products:
     title_must_exclude: []
 
     # Preisgrenze für die kleinere Cool-Version.
-    max_price: 699.0
+    max_price: 799.0
 
     # Empfehlung: nur Neuware.
     allow_used: false
