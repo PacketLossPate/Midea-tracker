@@ -2,11 +2,15 @@ name: Midea PortaSplit Verfügbarkeit
 
 on:
   schedule:
-    # Alle 10 Minuten (UTC). GitHub kann den Start unter Last leicht verzögern.
-    - cron: "*/10 * * * *"
-  workflow_dispatch: {}  # manueller Start für Tests
+    # Alle 10 Minuten, aber bewusst versetzt.
+    # Läuft bei :03, :13, :23, :33, :43, :53.
+    # Das reduziert GitHub-Lastspitzen gegenüber :00/:10/:20.
+    - cron: "3-59/10 * * * *"
 
-# Erlaubt dem Workflow, den aktualisierten state.json zurück zu committen.
+  # Manueller Start über GitHub Actions → Run workflow
+  workflow_dispatch: {}
+
+# Erlaubt dem Workflow, state.json zurück ins Repository zu committen.
 permissions:
   contents: write
 
@@ -17,11 +21,16 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 8  # Sicherheitsnetz: bricht ab, falls ein Shop hängt
-    steps:
-      - uses: actions/checkout@v4
+    timeout-minutes: 8
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Python installieren
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
@@ -43,8 +52,13 @@ jobs:
           if [[ -n "$(git status --porcelain state.json)" ]]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
+
             git add state.json
             git commit -m "chore: update availability state [skip ci]"
+
+            # Vor dem Push den aktuellen Branch-Stand holen.
+            # Verhindert Fehler wie: rejected / fetch first.
+            git pull --rebase origin "$GITHUB_REF_NAME"
             git push
           else
             echo "Kein State-Update."
