@@ -10,17 +10,24 @@ products:
     # Bestätigte EAN der gesuchten Midea PortaSplit 12.000 BTU.
     eans:
       - "4048164116478"
-    # Schlüsselwörter für den Fallback-Titelabgleich, falls eine Quelle keine
-    # EAN liefert. ALLE müssen (case-insensitiv) im Titel vorkommen.
+
+    # Fallback-Titelabgleich, falls eine Quelle keine EAN liefert.
     title_must_include:
       - "portasplit"
-    # Hinweis: Das Zielgerät (EAN 4048164116478) IST Comfee-gebrandet
-    # ("Midea Comfee PortaSplit"), daher KEIN comfee-Ausschluss. Der EAN-Abgleich
-    # ist der starke Anker; ohne EAN greift der Titel ("portasplit").
-    title_must_exclude: []
-    max_price: 999.0  # EUR – nur Angebote darunter lösen aus
-    allow_used: true  # Amazon Warehouse / gebrauchte Artikel erlauben
-    # Pro Quelle die direkte Produkt-URL. Leere/fehlende Werte = übersprungen.
+
+    # Wichtig: "cool" ausschließen, damit die kleinere PortaSplit Cool
+    # nicht versehentlich als 12.000-BTU-Modell gemeldet wird.
+    title_must_exclude:
+      - "cool"
+
+    # Preisgrenze für die normale 12.000-BTU-Version.
+    max_price: 999.0
+
+    # Empfehlung: false = nur Neuware.
+    # Wenn Amazon Warehouse / gebrauchte Artikel okay sind, auf true ändern.
+    allow_used: false
+
+    # Pro Quelle die direkte Produkt-URL. Leere Werte = Quelle wird übersprungen.
     urls:
       geizhals: "https://geizhals.de/midea-comfee-portasplit-v233573.html"
       idealo: "https://www.idealo.de/preisvergleich/OffersOfProduct/204374464_-portasplit-3-5-kw-midea.html"
@@ -31,15 +38,24 @@ products:
       hornbach: "https://www.hornbach.de/p/klimasplitgeraet-midea-portasplit-12-000-btu-105-m-weiss/12356554/"
       amazon: "https://www.amazon.de/dp/B0D3PP64JS"
 
-        - name: "Midea PortaSplit Cool 8.000 BTU"
+  - name: "Midea PortaSplit Cool 8.000 BTU"
+    # EAN der kleineren PortaSplit Cool 8.000 BTU / ca. 2,35 kW.
     eans:
       - "4048164122301"
+
+    # Hier muss zusätzlich "cool" im Titel vorkommen.
     title_must_include:
       - "portasplit"
       - "cool"
+
     title_must_exclude: []
+
+    # Preisgrenze für die kleinere Cool-Version.
     max_price: 699.0
+
+    # Empfehlung: nur Neuware.
     allow_used: false
+
     urls:
       geizhals: ""
       idealo: "https://www.idealo.de/preisvergleich/OffersOfProduct/210261557_-portasplit-cool-2-35kw-midea.html"
@@ -49,17 +65,6 @@ products:
       bauhaus: ""
       hornbach: ""
       amazon: ""
-  # Weiteres Gerät? Einfach einen zweiten Eintrag nach demselben Muster anlegen:
-  # - name: "Beispiel-Klimagerät"
-  #   eans:
-  #     - "0000000000000"
-  #   title_must_include:
-  #     - "beispiel"
-  #   title_must_exclude: []
-  #   max_price: 600.0
-  #   allow_used: false
-  #   urls:
-  #     idealo: "https://www.idealo.de/preisvergleich/OffersOfProduct/…"
 
 location:
   postal_code: "63533"
@@ -79,9 +84,8 @@ sources:
   hornbach: true
   amazon: true
 
-# Tägliche "lebt noch"-Statusmeldung via Telegram (günstigster Preis je Gerät,
-# Quellen mit Daten). Zusätzlich ein Sofort-Alarm bei Totalausfall (keine
-# einzige Quelle lieferte Daten). Beides ist auf max. 1x/Tag entprellt.
+# Tägliche "lebt noch"-Statusmeldung via Telegram.
+# hour_utc: 6 entspricht ca. 8 Uhr deutscher Sommerzeit.
 heartbeat:
   enabled: true
-  hour_utc: 6  # erste Meldung am/nach dieser UTC-Stunde (6 ≈ 8 Uhr MESZ)
+  hour_utc: 6
